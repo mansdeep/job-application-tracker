@@ -9,8 +9,8 @@ function daysSince(dateString: string) {
     (Date.now() - new Date(dateString).getTime()) / (1000 * 60 * 60 * 24),
   );
   if (days <= 0) return "today";
-  if (days === 1) return "1 day ago";
-  return `${days} days ago`;
+  if (days === 1) return "1d ago";
+  return `${days}d ago`;
 }
 
 export function JobCard({
@@ -36,15 +36,19 @@ export function JobCard({
       {...attributes}
       {...listeners}
       onClick={onClick}
-      className="cursor-grab rounded-md border border-gray-200 bg-white p-3 shadow-sm active:cursor-grabbing hover:border-gray-300"
+      className="cursor-grab rounded-md border border-border bg-surface-2 p-3 transition-colors active:cursor-grabbing hover:border-white/15"
     >
-      <div className="text-sm font-medium text-gray-900">{job.role}</div>
-      <div className="text-sm text-gray-600">{job.company}</div>
-      <div className="mt-2 flex items-center justify-between text-xs text-gray-400">
-        <span>Added {daysSince(job.createdAt)}</span>
+      <div className="text-[13px] font-medium text-text-primary">
+        {job.role}
+      </div>
+      <div className="text-[13px] text-text-secondary">{job.company}</div>
+      <div className="mt-2.5 flex items-center justify-between">
+        <span className="font-mono text-[11px] tracking-[-0.01em] text-text-dim">
+          {daysSince(job.createdAt)}
+        </span>
         {job.prepKit && (
-          <span className="rounded-full bg-green-100 px-2 py-0.5 text-green-700">
-            Kit ready
+          <span className="rounded border border-accent/30 bg-accent/10 px-1.5 py-0.5 font-mono text-[11px] tracking-[-0.01em] text-accent">
+            kit ready
           </span>
         )}
       </div>

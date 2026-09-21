@@ -186,7 +186,7 @@ export function Board({ initialJobs }: { initialJobs: Job[] }) {
       <div className="flex items-center justify-between px-6 pt-4">
         <button
           onClick={() => setAddOpen(true)}
-          className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+          className="rounded-md bg-accent px-3 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-hover"
         >
           + Add job
         </button>

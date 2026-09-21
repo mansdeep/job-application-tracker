@@ -14,10 +14,12 @@ export default async function BoardPage() {
   });
 
   return (
-    <main className="flex min-h-screen flex-col bg-gray-50">
-      <header className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
-        <h1 className="text-lg font-semibold">Job Application Tracker</h1>
-        <div className="flex items-center gap-3 text-sm text-gray-500">
+    <main className="flex min-h-screen flex-col bg-canvas">
+      <header className="flex items-center justify-between border-b border-border px-6 py-3">
+        <h1 className="text-[13px] font-semibold tracking-[-0.02em] text-text-primary">
+          Job Application Tracker
+        </h1>
+        <div className="flex items-center gap-4 text-[13px] text-text-secondary">
           <span>{session?.user?.email}</span>
           <form
             action={async () => {
@@ -25,7 +27,10 @@ export default async function BoardPage() {
               await signOut({ redirectTo: "/login" });
             }}
           >
-            <button type="submit" className="hover:text-gray-900">
+            <button
+              type="submit"
+              className="rounded-md px-2 py-1 transition-colors hover:bg-surface-3 hover:text-text-primary"
+            >
               Sign out
             </button>
           </form>

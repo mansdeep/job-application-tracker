@@ -4,6 +4,10 @@ import { useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import type { Job } from "@/lib/types";
 
+const fieldLabel = "text-[11px] font-medium tracking-[-0.01em] text-text-dim uppercase";
+const fieldInput =
+  "mt-1 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[13px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none";
+
 export function AddJobModal({
   onClose,
   onCreated,
@@ -42,73 +46,71 @@ export function AddJobModal({
 
   return (
     <Modal onClose={onClose} wide>
-      <h2 className="text-lg font-semibold">Add a job</h2>
-      <p className="mt-1 text-sm text-gray-500">
+      <h2 className="text-[15px] font-semibold tracking-[-0.02em] text-text-primary">
+        Add a job
+      </h2>
+      <p className="mt-1 text-[13px] text-text-secondary">
         Paste the job description below — it becomes a card on your board.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-4 space-y-3">
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-xs font-medium text-gray-600">Company</label>
+            <label className={fieldLabel}>Company</label>
             <input
               required
               value={company}
               onChange={(e) => setCompany(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+              className={fieldInput}
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-600">Role</label>
+            <label className={fieldLabel}>Role</label>
             <input
               required
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+              className={fieldInput}
             />
           </div>
         </div>
 
         <div>
-          <label className="text-xs font-medium text-gray-600">
-            Job posting URL (optional)
-          </label>
+          <label className={fieldLabel}>Job posting URL (optional)</label>
           <input
             type="url"
             value={sourceUrl}
             onChange={(e) => setSourceUrl(e.target.value)}
             placeholder="https://"
-            className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+            className={fieldInput}
           />
         </div>
 
         <div>
-          <label className="text-xs font-medium text-gray-600">
-            Job description
-          </label>
+          <label className={fieldLabel}>Job description</label>
           <textarea
             required
             rows={8}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+            className={fieldInput}
           />
         </div>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-[13px] text-danger">{error}</p>}
 
         <div className="flex justify-end gap-2 pt-2">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg px-4 py-2 text-sm text-gray-600 hover:bg-gray-100"
+            className="rounded-md border border-border px-3 py-1.5 text-[13px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
+            className="rounded-md bg-accent px-3 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
           >
             {submitting ? "Adding…" : "Add job"}
           </button>

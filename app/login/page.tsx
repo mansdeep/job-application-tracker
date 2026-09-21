@@ -16,17 +16,19 @@ export default async function LoginPage({
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 px-4">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-canvas px-4">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
-          <h1 className="text-2xl font-semibold">Job Application Tracker</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-[20px] font-semibold tracking-[-0.02em] text-text-primary">
+            Job Application Tracker
+          </h1>
+          <p className="mt-1 text-[13px] text-text-secondary">
             Sign in with your email — no password needed.
           </p>
         </div>
 
         {error && (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-center text-sm text-red-800">
+          <div className="rounded-md border border-danger/30 bg-danger/10 p-3 text-center text-[13px] text-danger">
             We couldn&apos;t send that link. Please try again in a moment.
           </div>
         )}
@@ -37,11 +39,11 @@ export default async function LoginPage({
             name="email"
             required
             placeholder="you@example.com"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-gray-500 focus:outline-none"
+            className="w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[13px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none"
           />
           <button
             type="submit"
-            className="w-full rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+            className="w-full rounded-md bg-accent px-3 py-2 text-[13px] font-medium text-white transition-colors hover:bg-accent-hover"
           >
             Send magic link
           </button>

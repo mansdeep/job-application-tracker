@@ -20,14 +20,18 @@ export function Column({
   const { setNodeRef } = useDroppable({ id: status });
 
   return (
-    <div className="flex w-72 shrink-0 flex-col rounded-lg bg-gray-100">
-      <div className="flex items-center justify-between px-4 py-3 text-sm font-medium text-gray-700">
-        <span>{label}</span>
-        <span className="text-xs text-gray-400">{jobs.length}</span>
+    <div className="flex w-72 shrink-0 flex-col border-r border-border last:border-r-0">
+      <div className="flex items-center justify-between px-4 py-3">
+        <span className="text-[13px] font-medium text-text-secondary">
+          {label}
+        </span>
+        <span className="font-mono text-[11px] text-text-dim">
+          {jobs.length}
+        </span>
       </div>
       <div
         ref={setNodeRef}
-        className="flex min-h-[4rem] flex-1 flex-col gap-2 px-3 pb-3"
+        className="flex min-h-16 flex-1 flex-col gap-2 px-3 pb-3"
       >
         <SortableContext
           items={jobs.map((j) => j.id)}
