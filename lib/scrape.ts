@@ -6,6 +6,38 @@ const FETCH_TIMEOUT_MS = 10_000;
 const USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
+// Sites known to gate their job content behind a login wall for
+// non-browser requests — fetching them server-side reliably returns a
+// sign-in/verification challenge page instead of the posting, which (if not
+// caught) reads as valid-looking "content" long enough to pass extraction.
+// No amount of HTML parsing gets around this; go straight to manual entry.
+const LOGIN_WALLED_HOSTS = [
+  "linkedin.com",
+  "glassdoor.com",
+  "indeed.com",
+  "ziprecruiter.com",
+];
+
+function isLoginWalledHost(hostname: string): boolean {
+  const host = hostname.toLowerCase();
+  return LOGIN_WALLED_HOSTS.some((d) => host === d || host.endsWith(`.${d}`));
+}
+
+// Fallback for sites not in the denylist above: if the "description" we
+// extracted is actually a sign-in/verification challenge page, its text
+// reliably contains one of these phrases.
+const AUTH_CHALLENGE_PATTERNS = [
+  /one-time link/i,
+  /sign in to (your|continue)/i,
+  /verify (your|it's you)/i,
+  /log ?in to (view|continue|see)/i,
+  /we'?ve emailed/i,
+];
+
+function looksLikeAuthChallenge(text: string): boolean {
+  return AUTH_CHALLENGE_PATTERNS.some((p) => p.test(text));
+}
+
 export type ScrapeResult =
   | {
       success: true;
@@ -72,6 +104,14 @@ function guessRoleAndCompany(
 }
 
 export async function scrapeJobUrl(url: URL): Promise<ScrapeResult> {
+  if (isLoginWalledHost(url.hostname)) {
+    return {
+      success: false,
+      reason:
+        "This site requires being logged in to view the posting, so we can't fetch it automatically. Please paste the description below.",
+    };
+  }
+
   let html: string;
   try {
     const res = await fetch(url.toString(), {
@@ -119,6 +159,14 @@ export async function scrapeJobUrl(url: URL): Promise<ScrapeResult> {
       success: false,
       reason:
         "Couldn't extract enough text from this page — it may require JavaScript to load the description",
+    };
+  }
+
+  if (looksLikeAuthChallenge(description)) {
+    return {
+      success: false,
+      reason:
+        "This site returned a sign-in page instead of the job posting. Please paste the description below.",
     };
   }
 
