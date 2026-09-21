@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ApplicationStatus {
+  WISHLIST
+  APPLIED
+  INTERVIEWING
+  OFFER
+  REJECTED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+
+  // Base resume, uploaded once and reused for every prep kit generation
+  resumeText      String?   @db.Text
+  resumeFileName  String?
+  resumeFileType  String?
+  resumeUpdatedAt DateTime?
+
+  accounts     Account[]
+  sessions     Session[]
+  applications JobApplication[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model JobApplication {
+  id          String            @id @default(cuid())
+  userId      String
+  company     String
+  role        String
+  sourceUrl   String?
+  description String            @db.Text
+  notes       String?           @db.Text
+  status      ApplicationStatus @default(WISHLIST)
+  position    Int               @default(0)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prepKit PrepKit?
+
+  @@index([userId, status])
+}
+
+model PrepKit {
+  id                 String   @id @default(cuid())
+  jobApplicationId   String   @unique
+  coverLetter        String   @db.Text
+  rewrittenResume    String   @db.Text
+  interviewQuestions Json
+  companyBrief       String   @db.Text
+  createdAt          DateTime @default(now())
+
+  jobApplication JobApplication @relation(fields: [jobApplicationId], references: [id], onDelete: Cascade)
+}
