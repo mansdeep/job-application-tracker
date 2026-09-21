@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { auth, signOut } from "@/auth";
 import { requireSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -20,6 +21,12 @@ export default async function BoardPage() {
           Job Application Tracker
         </h1>
         <div className="flex items-center gap-4 text-[13px] text-text-secondary">
+          <Link
+            href="/profile"
+            className="transition-colors hover:text-text-primary"
+          >
+            Profile
+          </Link>
           <span>{session?.user?.email}</span>
           <form
             action={async () => {

@@ -36,3 +36,7 @@ export const updateJobSchema = z.object({
 export const scrapeRequestSchema = z.object({
   url: z.string().trim().url().max(2000),
 });
+
+export const resumeTextSchema = z.object({
+  text: z.string().trim().min(1).max(50_000),
+});
