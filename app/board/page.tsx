@@ -1,8 +1,17 @@
 import { auth, signOut } from "@/auth";
-import { STATUSES } from "@/lib/status";
+import { requireSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { Board } from "./board";
 
 export default async function BoardPage() {
   const session = await auth();
+  const { userId } = await requireSession();
+
+  const jobs = await prisma.jobApplication.findMany({
+    where: { userId },
+    orderBy: [{ status: "asc" }, { position: "asc" }],
+    include: { prepKit: { select: { id: true } } },
+  });
 
   return (
     <main className="flex min-h-screen flex-col bg-gray-50">
@@ -23,21 +32,13 @@ export default async function BoardPage() {
         </div>
       </header>
 
-      <div className="flex flex-1 gap-4 overflow-x-auto p-6">
-        {STATUSES.map((status) => (
-          <div
-            key={status.value}
-            className="flex w-72 shrink-0 flex-col rounded-lg bg-gray-100"
-          >
-            <div className="px-4 py-3 text-sm font-medium text-gray-700">
-              {status.label}
-            </div>
-            <div className="flex flex-1 flex-col gap-2 px-3 pb-3">
-              {/* Job cards land here in Phase 2 */}
-            </div>
-          </div>
-        ))}
-      </div>
+      <Board
+        initialJobs={jobs.map((job) => ({
+          ...job,
+          createdAt: job.createdAt.toISOString(),
+          updatedAt: job.updatedAt.toISOString(),
+        }))}
+      />
     </main>
   );
 }

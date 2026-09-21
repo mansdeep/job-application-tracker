@@ -3,9 +3,9 @@ import { signIn } from "@/auth";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ callbackUrl?: string }>;
+  searchParams: Promise<{ callbackUrl?: string; error?: string }>;
 }) {
-  const { callbackUrl } = await searchParams;
+  const { callbackUrl, error } = await searchParams;
 
   async function sendMagicLink(formData: FormData) {
     "use server";
@@ -24,6 +24,12 @@ export default async function LoginPage({
             Sign in with your email — no password needed.
           </p>
         </div>
+
+        {error && (
+          <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-center text-sm text-red-800">
+            We couldn&apos;t send that link. Please try again in a moment.
+          </div>
+        )}
 
         <form action={sendMagicLink} className="space-y-3">
           <input

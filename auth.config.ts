@@ -7,7 +7,7 @@ import type { NextAuthConfig } from "next-auth";
  */
 export const authConfig = {
   session: { strategy: "jwt" },
-  pages: { signIn: "/login", verifyRequest: "/login/verify" },
+  pages: { signIn: "/login", verifyRequest: "/login/verify", error: "/login" },
   providers: [],
   callbacks: {
     session({ session, token }) {
