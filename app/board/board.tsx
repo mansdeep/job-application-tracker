@@ -181,6 +181,18 @@ export function Board({ initialJobs }: { initialJobs: Job[] }) {
     setSelectedJob(null);
   }
 
+  function handlePrepKitChange(jobId: string, hasKit: boolean) {
+    setJobsByStatus((prev) => {
+      const next = { ...prev };
+      for (const key of Object.keys(next) as ApplicationStatus[]) {
+        next[key] = next[key].map((j) =>
+          j.id === jobId ? { ...j, prepKit: hasKit ? { id: jobId } : null } : j,
+        );
+      }
+      return next;
+    });
+  }
+
   return (
     <>
       <div className="flex items-center justify-between px-6 pt-4">
@@ -228,6 +240,7 @@ export function Board({ initialJobs }: { initialJobs: Job[] }) {
           onClose={() => setSelectedJob(null)}
           onUpdated={handleJobUpdated}
           onDeleted={handleJobDeleted}
+          onPrepKitChange={handlePrepKitChange}
         />
       )}
     </>

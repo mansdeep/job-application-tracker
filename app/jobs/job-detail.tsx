@@ -1,21 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { STATUSES } from "@/lib/status";
-import type { Job } from "@/lib/types";
+import type { Job, PrepKitData } from "@/lib/types";
+import { PrepKitPanel } from "./prepkit-panel";
 
 export function JobDetail({
   job,
   onClose,
   onUpdated,
   onDeleted,
+  onPrepKitChange,
 }: {
   job: Job;
   onClose: () => void;
   onUpdated: (job: Job) => void;
   onDeleted: (jobId: string) => void;
+  onPrepKitChange: (jobId: string, hasKit: boolean) => void;
 }) {
   const [notes, setNotes] = useState(job.notes ?? "");
   const [status, setStatus] = useState(job.status);
@@ -23,7 +26,34 @@ export function JobDetail({
   const [deleting, setDeleting] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
+  const [prepKit, setPrepKit] = useState<PrepKitData | null>(null);
+  const [resumeMissing, setResumeMissing] = useState(false);
+  const [loadingKit, setLoadingKit] = useState(true);
+
   const dirty = notes !== (job.notes ?? "") || status !== job.status;
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const [jobRes, resumeRes] = await Promise.all([
+          fetch(`/api/jobs/${job.id}`),
+          fetch("/api/profile/resume"),
+        ]);
+        const jobData = await jobRes.json();
+        const resumeData = await resumeRes.json();
+        if (cancelled) return;
+        setPrepKit(jobData.job?.prepKit ?? null);
+        setResumeMissing(!resumeData.resume?.resumeText);
+      } finally {
+        if (!cancelled) setLoadingKit(false);
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [job.id]);
 
   async function handleSave() {
     setSaving(true);
@@ -109,9 +139,14 @@ export function JobDetail({
           />
         </div>
 
-        <div className="mt-4 rounded-md border border-dashed border-border p-4 text-center text-[13px] text-text-dim">
-          Preparation Kit generation coming soon
-        </div>
+        {!loadingKit && (
+          <PrepKitPanel
+            jobId={job.id}
+            initialPrepKit={prepKit}
+            resumeMissing={resumeMissing}
+            onKitChange={(hasKit) => onPrepKitChange(job.id, hasKit)}
+          />
+        )}
 
         <div className="mt-5 flex items-center justify-between">
           <button

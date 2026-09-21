@@ -1,5 +1,14 @@
 import type { ApplicationStatus } from "@/lib/status";
 
+export type PrepKitData = {
+  id: string;
+  coverLetter: string;
+  rewrittenResume: string;
+  interviewQuestions: string[];
+  companyBrief: string;
+  createdAt: string;
+};
+
 export type Job = {
   id: string;
   company: string;
