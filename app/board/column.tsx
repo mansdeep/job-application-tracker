@@ -20,7 +20,7 @@ export function Column({
   const { setNodeRef } = useDroppable({ id: status });
 
   return (
-    <div className="flex w-72 shrink-0 flex-col border-r border-border last:border-r-0">
+    <div className="flex w-72 shrink-0 flex-col border-t border-r border-border last:border-r-0">
       <div className="flex items-center justify-between px-4 py-3">
         <span className="text-[14px] font-medium text-text-secondary">
           {label}
