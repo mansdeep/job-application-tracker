@@ -205,7 +205,7 @@ export function ResumeForm({ initial }: { initial: ResumeInfo }) {
             value={pastedText}
             onChange={(e) => setPastedText(e.target.value)}
             placeholder="Paste your resume text here…"
-            className="w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none"
+            className="w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
           {error && <p className="text-[15px] text-danger">{error}</p>}
           <div className="flex justify-end gap-2">

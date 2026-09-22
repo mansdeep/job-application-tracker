@@ -74,7 +74,7 @@ export default async function LoginPage({
               name="email"
               required
               placeholder="you@example.com"
-              className="w-full rounded-md border border-border bg-surface-1 px-4 py-3 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none"
+              className="w-full rounded-md border border-border bg-surface-1 px-4 py-3 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
             />
             <button
               type="submit"

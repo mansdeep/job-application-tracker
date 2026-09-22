@@ -51,7 +51,7 @@ function Section({
           </button>
         </div>
       </div>
-      <p className="mt-2 max-h-40 overflow-y-auto whitespace-pre-wrap text-[15px] text-text-secondary">
+      <p className="mt-2 max-h-64 overflow-y-auto whitespace-pre-wrap text-[15px] text-text-secondary">
         {body}
       </p>
     </div>

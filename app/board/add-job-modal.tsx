@@ -6,7 +6,7 @@ import type { Job } from "@/lib/types";
 
 const fieldLabel = "text-[12px] font-medium tracking-[-0.01em] text-text-dim uppercase";
 const fieldInput =
-  "mt-1 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none";
+  "mt-1 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30";
 
 type FetchState =
   | { status: "idle" }
@@ -135,7 +135,7 @@ export function AddJobModal({
                 if (fetchState.status !== "idle") setFetchState({ status: "idle" });
               }}
               placeholder="https://"
-              className="w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none"
+              className="w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
             />
             <button
               type="button"

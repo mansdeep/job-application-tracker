@@ -96,7 +96,7 @@ export function JobDetail({
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as typeof status)}
-            className="rounded-md border border-border bg-surface-1 px-2 py-1 text-[15px] text-text-primary focus:border-accent focus:outline-none"
+            className="rounded-md border border-border bg-surface-1 px-2 py-1 text-[15px] text-text-primary focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
           >
             {STATUSES.map((s) => (
               <option key={s.value} value={s.value}>
@@ -121,7 +121,7 @@ export function JobDetail({
           <h3 className="text-[12px] font-medium uppercase tracking-[-0.01em] text-text-dim">
             Job description
           </h3>
-          <div className="mt-1 max-h-48 overflow-y-auto whitespace-pre-wrap rounded-md border border-border bg-surface-1 p-3 text-[15px] text-text-secondary">
+          <div className="mt-1 max-h-64 overflow-y-auto whitespace-pre-wrap rounded-md border border-border bg-surface-1 p-3 text-[15px] text-text-secondary">
             {job.description}
           </div>
         </div>
@@ -135,7 +135,7 @@ export function JobDetail({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Add a note…"
-            className="mt-1 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none"
+            className="mt-1 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
         </div>
 
