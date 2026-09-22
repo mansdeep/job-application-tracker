@@ -49,6 +49,6 @@ When writing or refactoring UI code, treat this file as immutable truth. Prefer 
 
 - Tokens live in `app/globals.css` as CSS custom properties, registered with Tailwind v4's `@theme inline` so they're usable as `bg-surface-2`, `text-text-primary`, `border-border`, `text-accent`, etc.
 - Fonts: Inter (sans) and JetBrains Mono (mono), loaded via `next/font/google` in `app/layout.tsx`.
-- This app is single-theme dark — no light mode toggle, no `prefers-color-scheme` branching.
+- This app is single-theme **light** (white canvas, near-black text) — by explicit request, overriding this spec's dark-mode default. Same surface-ladder + hairline-border structure as the dark spec, just inverted; no light/dark toggle, no `prefers-color-scheme` branching.
 - Dates, counts, and other key-value metadata (job card timestamps, column counts) use the mono font per section 3.
 - No `rounded-full` badges/pills anywhere — status/kit indicators use `rounded` (4px) or `rounded-md` (6px) bordered tags instead.
