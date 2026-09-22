@@ -1,4 +1,4 @@
-import { JSDOM } from "jsdom";
+import { parseHTML } from "linkedom";
 import { Readability } from "@mozilla/readability";
 
 const MIN_DESCRIPTION_LENGTH = 200;
@@ -134,21 +134,22 @@ export async function scrapeJobUrl(url: URL): Promise<ScrapeResult> {
     };
   }
 
-  let dom: JSDOM;
+  let document: Document;
   try {
-    dom = new JSDOM(html, { url: url.toString() });
+    ({ document } = parseHTML(html));
   } catch {
     return { success: false, reason: "Could not parse page HTML" };
   }
 
-  const { document } = dom.window;
   const ogTitle = metaContent(document, 'meta[property="og:title"]');
   const ogSiteName = metaContent(document, 'meta[property="og:site_name"]');
   const pageTitle = ogTitle ?? document.title ?? undefined;
 
   let description = "";
   try {
-    const article = new Readability(dom.window.document).parse();
+    // Readability mutates the document it's given, so hand it the only
+    // reference — nothing else here reads `document` afterward.
+    const article = new Readability(document).parse();
     description = article?.textContent?.trim() ?? "";
   } catch {
     // fall through with empty description
