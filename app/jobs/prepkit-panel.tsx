@@ -76,6 +76,21 @@ export function PrepKitPanel({
         method: "POST",
       });
       const data = await res.json();
+
+      if (res.status === 409) {
+        // Our local state thought no kit existed, but the server disagrees —
+        // most often a slow generation from an earlier click finished after
+        // this one started. Fetch the real kit instead of leaving the user
+        // stuck on an error with no way to see or delete it.
+        const jobRes = await fetch(`/api/jobs/${jobId}`);
+        const jobData = await jobRes.json();
+        if (jobData.job?.prepKit) {
+          setPrepKit(jobData.job.prepKit);
+          onKitChange(true);
+          return;
+        }
+      }
+
       if (!res.ok) {
         throw new Error(data.error ?? "Generation failed. Please try again.");
       }
