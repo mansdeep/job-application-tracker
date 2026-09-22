@@ -5,11 +5,15 @@ import { z } from "zod";
 const client = new Anthropic();
 
 export const PrepKitSchema = z.object({
-  coverLetter: z.string().describe("A tailored cover letter for this job."),
+  coverLetter: z
+    .string()
+    .describe(
+      "A tailored cover letter for this job, formatted as an actual letter ready to send (e.g. opening greeting, body, sign-off). Do not start with a label like 'Cover Letter' — begin directly with the letter itself.",
+    ),
   rewrittenResume: z
     .string()
     .describe(
-      "The candidate's resume rewritten in plain text to emphasize the experience most relevant to this job.",
+      "The candidate's resume rewritten in plain text to emphasize the experience most relevant to this job, formatted like a real resume: first line is the candidate's name, followed by contact info, then clear ALL-CAPS section headings (e.g. SUMMARY, EXPERIENCE, EDUCATION, SKILLS) with content below each. Do not start with a label like 'Rewritten Resume' or 'Resume' — begin directly with the candidate's name.",
     ),
   interviewQuestions: z
     .array(z.string())
@@ -54,8 +58,8 @@ ${input.resumeText}
 """
 
 Produce all four of the following, tailored specifically to this job and this candidate's actual background (do not invent experience they don't have):
-1. A tailored cover letter.
-2. Their resume rewritten in plain text to emphasize the experience most relevant to this job.
+1. A tailored cover letter — formatted as a real, ready-to-send letter. No "Cover Letter" label at the top; start with the letter itself.
+2. Their resume rewritten in plain text to emphasize the experience most relevant to this job — formatted like a real resume (name first, then contact info, then ALL-CAPS section headings such as SUMMARY / EXPERIENCE / EDUCATION / SKILLS). No "Rewritten Resume" or "Resume" label at the top; start with the candidate's name.
 3. 10 likely interview questions for this specific role.
 4. A one-page company brief covering what the company does and what they likely value in a candidate for this role.`;
 }

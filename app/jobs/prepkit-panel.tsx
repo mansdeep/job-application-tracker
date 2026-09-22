@@ -12,10 +12,15 @@ function Section({
   title,
   body,
   filename,
+  documentStyle = false,
 }: {
   title: string;
   body: string;
   filename: string;
+  /** True for content meant to look like a real, sendable document (a
+   * resume, a cover letter) — the downloaded PDF omits our own section
+   * label as a heading so it just looks like the document itself. */
+  documentStyle?: boolean;
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -37,7 +42,9 @@ function Section({
             {copied ? "Copied" : "Copy"}
           </button>
           <button
-            onClick={() => downloadTextAsPdf(title, body, filename)}
+            onClick={() =>
+              downloadTextAsPdf(body, filename, documentStyle ? undefined : title)
+            }
             className="text-[13px] text-text-secondary transition-colors hover:text-text-primary"
           >
             Download
@@ -137,11 +144,13 @@ export function PrepKitPanel({
           title="Cover letter"
           body={prepKit.coverLetter}
           filename="cover-letter.pdf"
+          documentStyle
         />
         <Section
           title="Rewritten resume"
           body={prepKit.rewrittenResume}
           filename="resume.pdf"
+          documentStyle
         />
         <Section
           title="Likely interview questions"
