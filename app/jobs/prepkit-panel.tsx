@@ -6,7 +6,7 @@ import { downloadTextAsPdf } from "@/lib/pdf-export";
 import type { PrepKitData } from "@/lib/types";
 
 const sectionLabel =
-  "text-[11px] font-medium uppercase tracking-[-0.01em] text-text-dim";
+  "text-[12px] font-medium uppercase tracking-[-0.01em] text-text-dim";
 
 function Section({
   title,
@@ -32,19 +32,19 @@ function Section({
         <div className="flex gap-3">
           <button
             onClick={handleCopy}
-            className="text-[12px] text-text-secondary transition-colors hover:text-text-primary"
+            className="text-[13px] text-text-secondary transition-colors hover:text-text-primary"
           >
             {copied ? "Copied" : "Copy"}
           </button>
           <button
             onClick={() => downloadTextAsPdf(title, body, filename)}
-            className="text-[12px] text-text-secondary transition-colors hover:text-text-primary"
+            className="text-[13px] text-text-secondary transition-colors hover:text-text-primary"
           >
             Download
           </button>
         </div>
       </div>
-      <p className="mt-2 max-h-40 overflow-y-auto whitespace-pre-wrap text-[13px] text-text-secondary">
+      <p className="mt-2 max-h-40 overflow-y-auto whitespace-pre-wrap text-[15px] text-text-secondary">
         {body}
       </p>
     </div>
@@ -113,7 +113,7 @@ export function PrepKitPanel({
           <h3 className={sectionLabel}>Preparation kit</h3>
           <button
             onClick={() => setConfirmDelete(true)}
-            className="text-[12px] text-danger hover:underline"
+            className="text-[13px] text-danger hover:underline"
           >
             Delete kit
           </button>
@@ -158,7 +158,7 @@ export function PrepKitPanel({
   return (
     <div className="mt-4 rounded-md border border-dashed border-border p-4 text-center">
       {resumeMissing ? (
-        <p className="text-[13px] text-text-dim">
+        <p className="text-[15px] text-text-dim">
           Upload your base resume in your{" "}
           <a href="/profile" className="text-accent hover:underline">
             profile
@@ -170,13 +170,13 @@ export function PrepKitPanel({
           <button
             onClick={handleGenerate}
             disabled={generating}
-            className="rounded-md bg-accent px-3 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
+            className="rounded-md bg-accent px-3 py-1.5 text-[15px] font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
           >
             {generating
               ? "Generating… this can take a minute"
               : "Generate Preparation Kit"}
           </button>
-          {error && <p className="mt-2 text-[13px] text-danger">{error}</p>}
+          {error && <p className="mt-2 text-[15px] text-danger">{error}</p>}
         </>
       )}
     </div>

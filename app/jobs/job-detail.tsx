@@ -88,15 +88,15 @@ export function JobDetail({
       <Modal onClose={onClose} wide>
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-[15px] font-semibold tracking-[-0.02em] text-text-primary">
+            <h2 className="text-[18px] font-semibold tracking-[-0.02em] text-text-primary">
               {job.role}
             </h2>
-            <p className="text-[13px] text-text-secondary">{job.company}</p>
+            <p className="text-[15px] text-text-secondary">{job.company}</p>
           </div>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as typeof status)}
-            className="rounded-md border border-border bg-surface-1 px-2 py-1 text-[13px] text-text-primary focus:border-accent focus:outline-none"
+            className="rounded-md border border-border bg-surface-1 px-2 py-1 text-[15px] text-text-primary focus:border-accent focus:outline-none"
           >
             {STATUSES.map((s) => (
               <option key={s.value} value={s.value}>
@@ -111,23 +111,23 @@ export function JobDetail({
             href={job.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 inline-block text-[13px] text-accent hover:underline"
+            className="mt-2 inline-block text-[15px] text-accent hover:underline"
           >
             View original posting ↗
           </a>
         )}
 
         <div className="mt-4">
-          <h3 className="text-[11px] font-medium uppercase tracking-[-0.01em] text-text-dim">
+          <h3 className="text-[12px] font-medium uppercase tracking-[-0.01em] text-text-dim">
             Job description
           </h3>
-          <div className="mt-1 max-h-48 overflow-y-auto whitespace-pre-wrap rounded-md border border-border bg-surface-1 p-3 text-[13px] text-text-secondary">
+          <div className="mt-1 max-h-48 overflow-y-auto whitespace-pre-wrap rounded-md border border-border bg-surface-1 p-3 text-[15px] text-text-secondary">
             {job.description}
           </div>
         </div>
 
         <div className="mt-4">
-          <h3 className="text-[11px] font-medium uppercase tracking-[-0.01em] text-text-dim">
+          <h3 className="text-[12px] font-medium uppercase tracking-[-0.01em] text-text-dim">
             Notes
           </h3>
           <textarea
@@ -135,7 +135,7 @@ export function JobDetail({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Add a note…"
-            className="mt-1 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[13px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none"
+            className="mt-1 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none"
           />
         </div>
 
@@ -151,21 +151,21 @@ export function JobDetail({
         <div className="mt-5 flex items-center justify-between">
           <button
             onClick={() => setConfirmDelete(true)}
-            className="text-[13px] text-danger hover:underline"
+            className="text-[15px] text-danger hover:underline"
           >
             Delete job
           </button>
           <div className="flex gap-2">
             <button
               onClick={onClose}
-              className="rounded-md border border-border px-3 py-1.5 text-[13px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
+              className="rounded-md border border-border px-3 py-1.5 text-[15px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
             >
               Close
             </button>
             <button
               onClick={handleSave}
               disabled={!dirty || saving}
-              className="rounded-md bg-accent px-3 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
+              className="rounded-md bg-accent px-3 py-1.5 text-[15px] font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
             >
               {saving ? "Saving…" : "Save changes"}
             </button>

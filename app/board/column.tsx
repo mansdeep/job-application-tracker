@@ -22,10 +22,10 @@ export function Column({
   return (
     <div className="flex w-72 shrink-0 flex-col border-r border-border last:border-r-0">
       <div className="flex items-center justify-between px-4 py-3">
-        <span className="text-[13px] font-medium text-text-secondary">
+        <span className="text-[14px] font-medium text-text-secondary">
           {label}
         </span>
-        <span className="font-mono text-[11px] text-text-dim">
+        <span className="font-mono text-[12px] text-text-dim">
           {jobs.length}
         </span>
       </div>

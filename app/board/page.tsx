@@ -16,11 +16,11 @@ export default async function BoardPage() {
 
   return (
     <main className="flex min-h-screen flex-col bg-canvas">
-      <header className="flex items-center justify-between border-b border-border px-6 py-3">
-        <h1 className="text-[13px] font-semibold tracking-[-0.02em] text-text-primary">
+      <header className="flex items-center justify-between border-b border-border px-6 py-4">
+        <h1 className="text-[17px] font-semibold tracking-[-0.02em] text-text-primary">
           Job Application Tracker
         </h1>
-        <div className="flex items-center gap-4 text-[13px] text-text-secondary">
+        <div className="flex items-center gap-4 text-[14px] text-text-secondary">
           <Link
             href="/profile"
             className="transition-colors hover:text-text-primary"

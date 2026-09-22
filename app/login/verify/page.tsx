@@ -5,10 +5,10 @@ export default function VerifyRequestPage() {
         <div className="mx-auto mb-3 flex h-8 w-8 items-center justify-center rounded-md bg-accent/15 text-accent">
           ✓
         </div>
-        <h1 className="text-[15px] font-semibold tracking-[-0.02em] text-text-primary">
+        <h1 className="text-[18px] font-semibold tracking-[-0.02em] text-text-primary">
           Check your email
         </h1>
-        <p className="mt-2 text-[13px] text-text-secondary">
+        <p className="mt-2 text-[15px] text-text-secondary">
           We sent you a sign-in link. Click it to continue.
         </p>
       </div>

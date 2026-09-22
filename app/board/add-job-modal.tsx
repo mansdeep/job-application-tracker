@@ -4,9 +4,9 @@ import { useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import type { Job } from "@/lib/types";
 
-const fieldLabel = "text-[11px] font-medium tracking-[-0.01em] text-text-dim uppercase";
+const fieldLabel = "text-[12px] font-medium tracking-[-0.01em] text-text-dim uppercase";
 const fieldInput =
-  "mt-1 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[13px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none";
+  "mt-1 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none";
 
 type FetchState =
   | { status: "idle" }
@@ -84,10 +84,10 @@ export function AddJobModal({
 
   return (
     <Modal onClose={onClose} wide>
-      <h2 className="text-[15px] font-semibold tracking-[-0.02em] text-text-primary">
+      <h2 className="text-[18px] font-semibold tracking-[-0.02em] text-text-primary">
         Add a job
       </h2>
-      <p className="mt-1 text-[13px] text-text-secondary">
+      <p className="mt-1 text-[15px] text-text-secondary">
         Paste a job posting URL to auto-fill the details, or fill them in yourself.
       </p>
 
@@ -103,24 +103,24 @@ export function AddJobModal({
                 if (fetchState.status !== "idle") setFetchState({ status: "idle" });
               }}
               placeholder="https://"
-              className="w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[13px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none"
+              className="w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none"
             />
             <button
               type="button"
               onClick={handleFetchDetails}
               disabled={!sourceUrl || fetchState.status === "loading"}
-              className="shrink-0 rounded-md border border-border px-3 py-1.5 text-[13px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary disabled:opacity-40"
+              className="shrink-0 rounded-md border border-border px-3 py-1.5 text-[15px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary disabled:opacity-40"
             >
               {fetchState.status === "loading" ? "Fetching…" : "Fetch details"}
             </button>
           </div>
           {fetchState.status === "success" && (
-            <p className="mt-1.5 text-[12px] text-accent">
+            <p className="mt-1.5 text-[13px] text-accent">
               We pulled this automatically — please check it looks right below.
             </p>
           )}
           {fetchState.status === "failed" && (
-            <p className="mt-1.5 text-[12px] text-text-dim">{fetchState.reason}</p>
+            <p className="mt-1.5 text-[13px] text-text-dim">{fetchState.reason}</p>
           )}
         </div>
 
@@ -156,20 +156,20 @@ export function AddJobModal({
           />
         </div>
 
-        {error && <p className="text-[13px] text-danger">{error}</p>}
+        {error && <p className="text-[15px] text-danger">{error}</p>}
 
         <div className="flex justify-end gap-2 pt-2">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md border border-border px-3 py-1.5 text-[13px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
+            className="rounded-md border border-border px-3 py-1.5 text-[15px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-md bg-accent px-3 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
+            className="rounded-md bg-accent px-3 py-1.5 text-[15px] font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
           >
             {submitting ? "Adding…" : "Add job"}
           </button>

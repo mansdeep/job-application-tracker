@@ -20,19 +20,19 @@ export default async function ProfilePage() {
 
   return (
     <main className="flex min-h-screen flex-col bg-canvas">
-      <header className="flex items-center justify-between border-b border-border px-6 py-3">
+      <header className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-4">
-          <h1 className="text-[13px] font-semibold tracking-[-0.02em] text-text-primary">
+          <h1 className="text-[17px] font-semibold tracking-[-0.02em] text-text-primary">
             Job Application Tracker
           </h1>
           <Link
             href="/board"
-            className="text-[13px] text-text-secondary transition-colors hover:text-text-primary"
+            className="text-[14px] text-text-secondary transition-colors hover:text-text-primary"
           >
             ← Board
           </Link>
         </div>
-        <div className="flex items-center gap-4 text-[13px] text-text-secondary">
+        <div className="flex items-center gap-4 text-[14px] text-text-secondary">
           <span>{session?.user?.email}</span>
           <form
             action={async () => {
@@ -51,10 +51,10 @@ export default async function ProfilePage() {
       </header>
 
       <div className="mx-auto w-full max-w-xl px-6 py-8">
-        <h2 className="text-[15px] font-semibold tracking-[-0.02em] text-text-primary">
+        <h2 className="text-[18px] font-semibold tracking-[-0.02em] text-text-primary">
           Base resume
         </h2>
-        <p className="mt-1 text-[13px] text-text-secondary">
+        <p className="mt-1 text-[14px] text-text-secondary">
           Uploaded once, reused every time you generate a Preparation Kit for
           a job.
         </p>

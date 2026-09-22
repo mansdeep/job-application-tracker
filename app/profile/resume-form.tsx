@@ -101,10 +101,10 @@ export function ResumeForm({ initial }: { initial: ResumeInfo }) {
       <div className="rounded-md border border-border bg-surface-2 p-4">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-[13px] font-medium text-text-primary">
+            <p className="text-[15px] font-medium text-text-primary">
               {resume.resumeFileName ?? "Pasted text"}
             </p>
-            <p className="mt-1 font-mono text-[11px] tracking-[-0.01em] text-text-dim">
+            <p className="mt-1 font-mono text-[12px] tracking-[-0.01em] text-text-dim">
               {resume.resumeUpdatedAt
                 ? `Updated ${formatDate(resume.resumeUpdatedAt)}`
                 : ""}{" "}
@@ -114,13 +114,13 @@ export function ResumeForm({ initial }: { initial: ResumeInfo }) {
           <div className="flex gap-2">
             <button
               onClick={() => setEditing(true)}
-              className="rounded-md border border-border px-3 py-1.5 text-[13px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
+              className="rounded-md border border-border px-3 py-1.5 text-[15px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
             >
               Replace
             </button>
             <button
               onClick={() => setConfirmDelete(true)}
-              className="rounded-md border border-border px-3 py-1.5 text-[13px] text-danger transition-colors hover:bg-danger/10"
+              className="rounded-md border border-border px-3 py-1.5 text-[15px] text-danger transition-colors hover:bg-danger/10"
             >
               Delete
             </button>
@@ -143,7 +143,7 @@ export function ResumeForm({ initial }: { initial: ResumeInfo }) {
 
   return (
     <div className="rounded-md border border-border bg-surface-2 p-4">
-      <div className="mb-3 flex gap-1 rounded-md border border-border bg-surface-1 p-1 text-[13px]">
+      <div className="mb-3 flex gap-1 rounded-md border border-border bg-surface-1 p-1 text-[15px]">
         <button
           type="button"
           onClick={() => setMode("file")}
@@ -174,16 +174,16 @@ export function ResumeForm({ initial }: { initial: ResumeInfo }) {
             ref={fileInputRef}
             type="file"
             accept=".pdf,.docx"
-            className="w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[13px] text-text-secondary file:mr-3 file:rounded file:border-0 file:bg-surface-3 file:px-3 file:py-1.5 file:text-[13px] file:text-text-primary"
+            className="w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-secondary file:mr-3 file:rounded file:border-0 file:bg-surface-3 file:px-3 file:py-1.5 file:text-[15px] file:text-text-primary"
           />
-          <p className="text-[12px] text-text-dim">PDF or .docx, up to 5MB.</p>
-          {error && <p className="text-[13px] text-danger">{error}</p>}
+          <p className="text-[13px] text-text-dim">PDF or .docx, up to 5MB.</p>
+          {error && <p className="text-[15px] text-danger">{error}</p>}
           <div className="flex justify-end gap-2">
             {resume.resumeText && (
               <button
                 type="button"
                 onClick={() => setEditing(false)}
-                className="rounded-md border border-border px-3 py-1.5 text-[13px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
+                className="rounded-md border border-border px-3 py-1.5 text-[15px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
               >
                 Cancel
               </button>
@@ -191,7 +191,7 @@ export function ResumeForm({ initial }: { initial: ResumeInfo }) {
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-md bg-accent px-3 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
+              className="rounded-md bg-accent px-3 py-1.5 text-[15px] font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
             >
               {submitting ? "Uploading…" : "Save resume"}
             </button>
@@ -205,15 +205,15 @@ export function ResumeForm({ initial }: { initial: ResumeInfo }) {
             value={pastedText}
             onChange={(e) => setPastedText(e.target.value)}
             placeholder="Paste your resume text here…"
-            className="w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[13px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none"
+            className="w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none"
           />
-          {error && <p className="text-[13px] text-danger">{error}</p>}
+          {error && <p className="text-[15px] text-danger">{error}</p>}
           <div className="flex justify-end gap-2">
             {resume.resumeText && (
               <button
                 type="button"
                 onClick={() => setEditing(false)}
-                className="rounded-md border border-border px-3 py-1.5 text-[13px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
+                className="rounded-md border border-border px-3 py-1.5 text-[15px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
               >
                 Cancel
               </button>
@@ -221,7 +221,7 @@ export function ResumeForm({ initial }: { initial: ResumeInfo }) {
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-md bg-accent px-3 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
+              className="rounded-md bg-accent px-3 py-1.5 text-[15px] font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
             >
               {submitting ? "Saving…" : "Save resume"}
             </button>

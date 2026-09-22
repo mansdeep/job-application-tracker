@@ -38,16 +38,16 @@ export function JobCard({
       onClick={onClick}
       className="cursor-grab rounded-md border border-border bg-surface-2 p-3 transition-colors active:cursor-grabbing hover:border-white/15"
     >
-      <div className="text-[13px] font-medium text-text-primary">
+      <div className="text-[15px] font-medium text-text-primary">
         {job.role}
       </div>
-      <div className="text-[13px] text-text-secondary">{job.company}</div>
+      <div className="text-[14px] text-text-secondary">{job.company}</div>
       <div className="mt-2.5 flex items-center justify-between">
-        <span className="font-mono text-[11px] tracking-[-0.01em] text-text-dim">
+        <span className="font-mono text-[12px] tracking-[-0.01em] text-text-dim">
           {daysSince(job.createdAt)}
         </span>
         {job.prepKit && (
-          <span className="rounded border border-accent/30 bg-accent/10 px-1.5 py-0.5 font-mono text-[11px] tracking-[-0.01em] text-accent">
+          <span className="rounded border border-accent/30 bg-accent/10 px-1.5 py-0.5 font-mono text-[12px] tracking-[-0.01em] text-accent">
             kit ready
           </span>
         )}
