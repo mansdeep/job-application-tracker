@@ -32,36 +32,38 @@ export default async function LoginPage({
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-canvas px-4 py-12">
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-md">
         <div className="text-center">
-          <h1 className="text-[20px] font-semibold tracking-[-0.02em] text-text-primary">
+          <h1 className="text-[28px] font-semibold tracking-[-0.02em] text-text-primary">
             Job Application Tracker
           </h1>
-          <p className="mt-1 text-[13px] text-text-secondary">
+          <p className="mt-2 text-[15px] text-text-secondary">
             A board for your job search, with AI-written prep for every
             application.
           </p>
         </div>
 
-        <div className="mt-6 space-y-2 rounded-md border border-border bg-surface-2 p-4">
+        <div className="mt-7 space-y-4 rounded-md border border-border bg-surface-2 p-5">
           {FEATURES.map((f) => (
-            <div key={f.label} className="flex gap-3">
-              <span className="w-14 shrink-0 font-mono text-[11px] uppercase tracking-[-0.01em] text-accent">
+            <div key={f.label} className="flex gap-4">
+              <span className="w-16 shrink-0 pt-0.5 font-mono text-[12px] font-medium uppercase tracking-[-0.01em] text-accent">
                 {f.label}
               </span>
-              <p className="text-[13px] text-text-secondary">{f.body}</p>
+              <p className="text-[15px] leading-snug text-text-primary">
+                {f.body}
+              </p>
             </div>
           ))}
         </div>
 
-        <div className="mt-6">
-          <p className="mb-2 text-center text-[12px] text-text-dim">
+        <div className="mt-7">
+          <p className="mb-3 text-center text-[14px] text-text-secondary">
             Enter your email to sign in — first time here creates your
             account automatically. No password to set or remember.
           </p>
 
           {error && (
-            <div className="mb-3 rounded-md border border-danger/30 bg-danger/10 p-3 text-center text-[13px] text-danger">
+            <div className="mb-3 rounded-md border border-danger/30 bg-danger/10 p-3 text-center text-[14px] text-danger">
               We couldn&apos;t send that link. Please try again in a moment.
             </div>
           )}
@@ -72,11 +74,11 @@ export default async function LoginPage({
               name="email"
               required
               placeholder="you@example.com"
-              className="w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[13px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none"
+              className="w-full rounded-md border border-border bg-surface-1 px-4 py-3 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none"
             />
             <button
               type="submit"
-              className="w-full rounded-md bg-accent px-3 py-2 text-[13px] font-medium text-white transition-colors hover:bg-accent-hover"
+              className="w-full rounded-md bg-accent px-4 py-3 text-[15px] font-medium text-white transition-colors hover:bg-accent-hover"
             >
               Send magic link
             </button>
