@@ -86,7 +86,7 @@ Best-effort server-side fetch + `@mozilla/readability` extraction for the "add j
 
 ### Resume text extraction (`lib/resume-extract.ts`)
 
-PDF via `pdf-parse` (built on `pdfjs-dist`), `.docx` via `mammoth`. `pdf-parse`/`pdfjs-dist` are listed in `next.config.ts`'s `serverExternalPackages` — without that, Next's bundler relocates pdf.js's worker script into a chunk file and breaks pdf.js's own relative-path lookup for it at runtime ("Setting up fake worker failed"), a real bug hit during development, not a preemptive workaround.
+PDF via `pdf-parse`, `.docx` via `mammoth`. `pdf-parse` is deliberately pinned to **v1** (`pdf-parse@1.1.1`, not the `^2.x` a fresh `npm install pdf-parse` would grab) — v2 rewrote it as a wrapper around the full `pdfjs-dist` rendering engine, which references browser-only globals (`DOMMatrix`) at module-load time. That worked fine in local dev but crashed on Vercel with `ReferenceError: DOMMatrix is not defined` the moment anyone tried to upload a resume in production — a real bug hit after deploying, not a theoretical one. v1 is the older, much simpler text-only parser with no `pdfjs-dist`/canvas dependency at all, which is all this feature actually needs. `pdf-parse` is still listed in `next.config.ts`'s `serverExternalPackages` to keep it a real unbundled `node_modules` import rather than something Turbopack inlines.
 
 ### Design system
 

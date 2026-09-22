@@ -1,4 +1,4 @@
-import { PDFParse } from "pdf-parse";
+import pdfParse from "pdf-parse";
 import mammoth from "mammoth";
 
 export type ResumeFileType = "pdf" | "docx";
@@ -24,13 +24,8 @@ export async function extractResumeText(
   fileType: ResumeFileType,
 ): Promise<string> {
   if (fileType === "pdf") {
-    const parser = new PDFParse({ data: buffer });
-    try {
-      const result = await parser.getText({ pageJoiner: "" });
-      return result.text.trim();
-    } finally {
-      await parser.destroy();
-    }
+    const result = await pdfParse(buffer);
+    return result.text.trim();
   }
 
   const result = await mammoth.extractRawText({ buffer });
