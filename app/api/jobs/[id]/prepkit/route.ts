@@ -1,10 +1,9 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@/app/generated/prisma/client";
 import { requireSession } from "@/lib/auth";
-import { toErrorResponse } from "@/lib/api-errors";
+import { toErrorResponse, toAnthropicErrorResponse } from "@/lib/api-errors";
 import { prisma } from "@/lib/prisma";
-import { generatePrepKit, PrepKitGenerationError } from "@/lib/anthropic";
+import { generatePrepKit } from "@/lib/anthropic";
 
 // A single generation call can take a while to produce four full documents.
 export const maxDuration = 60;
@@ -50,42 +49,8 @@ export async function POST(_request: NextRequest, { params }: RouteParams) {
         resumeText: user.resumeText,
       });
     } catch (err) {
-      if (err instanceof Anthropic.RateLimitError) {
-        return NextResponse.json(
-          { error: "We're generating a lot of kits right now — please try again shortly." },
-          { status: 503 },
-        );
-      }
-      if (
-        err instanceof Anthropic.BadRequestError &&
-        /credit balance/i.test(err.message)
-      ) {
-        console.error("[prepkit] Anthropic billing error", err);
-        return NextResponse.json(
-          {
-            error:
-              "The Anthropic account behind this app is out of credits. Add credits in the Anthropic Console (Plans & Billing) and try again.",
-          },
-          { status: 500 },
-        );
-      }
-      if (
-        err instanceof Anthropic.AuthenticationError ||
-        err instanceof Anthropic.PermissionDeniedError
-      ) {
-        console.error("[prepkit] Anthropic auth/config error", err);
-        return NextResponse.json(
-          { error: "Prep kit generation isn't configured correctly. Please try again later." },
-          { status: 500 },
-        );
-      }
-      if (err instanceof PrepKitGenerationError || err instanceof Anthropic.APIError) {
-        console.error("[prepkit] generation failed", err);
-        return NextResponse.json(
-          { error: "Generation failed. Please try again." },
-          { status: 502 },
-        );
-      }
+      const mapped = toAnthropicErrorResponse(err, "[prepkit]");
+      if (mapped) return mapped;
       throw err;
     }
 

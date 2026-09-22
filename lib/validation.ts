@@ -44,3 +44,15 @@ export const resumeTextSchema = z.object({
 export const themePreferenceSchema = z.object({
   theme: z.enum(["LIGHT", "DARK"]),
 });
+
+export const jobSearchRequestSchema = z
+  .object({
+    company: z.string().trim().max(200).optional(),
+    location: z.string().trim().max(200).optional(),
+    remote: z.boolean().optional(),
+    role: z.string().trim().max(200).optional(),
+  })
+  .refine(
+    (v) => v.company || v.location || v.remote || v.role,
+    "Enter at least one search term",
+  );

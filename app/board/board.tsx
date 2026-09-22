@@ -20,6 +20,7 @@ import type { Job } from "@/lib/types";
 import { Column } from "./column";
 import { JobCard } from "./job-card";
 import { AddJobModal } from "./add-job-modal";
+import { FindJobsModal } from "./find-jobs-modal";
 import { JobDetail } from "../jobs/job-detail";
 
 function groupByStatus(jobs: Job[]): Record<ApplicationStatus, Job[]> {
@@ -42,6 +43,7 @@ export function Board({ initialJobs }: { initialJobs: Job[] }) {
   const [activeJob, setActiveJob] = useState<Job | null>(null);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [addOpen, setAddOpen] = useState(false);
+  const [findOpen, setFindOpen] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -156,6 +158,19 @@ export function Board({ initialJobs }: { initialJobs: Job[] }) {
     setAddOpen(false);
   }
 
+  function handleJobsCreated(jobs: Job[]) {
+    // Doesn't close the modal itself — FindJobsModal stays open on a partial
+    // failure so the user can retry the rest, and calls onClose separately
+    // once everything selected has been added successfully.
+    setJobsByStatus((prev) => {
+      const next = { ...prev };
+      for (const job of jobs) {
+        next[job.status] = [...next[job.status], job];
+      }
+      return next;
+    });
+  }
+
   function handleJobUpdated(job: Job) {
     setJobsByStatus((prev) => {
       const next = { ...prev };
@@ -205,12 +220,20 @@ export function Board({ initialJobs }: { initialJobs: Job[] }) {
             notes or generate its Preparation Kit.
           </p>
         </div>
-        <button
-          onClick={() => setAddOpen(true)}
-          className="shrink-0 rounded-md bg-accent px-4 py-2 text-[14px] font-medium text-white transition-colors hover:bg-accent-hover"
-        >
-          + Add job
-        </button>
+        <div className="flex shrink-0 gap-2">
+          <button
+            onClick={() => setFindOpen(true)}
+            className="rounded-md border border-border px-4 py-2 text-[14px] font-medium text-text-primary transition-colors hover:bg-surface-3"
+          >
+            Find jobs
+          </button>
+          <button
+            onClick={() => setAddOpen(true)}
+            className="rounded-md bg-accent px-4 py-2 text-[14px] font-medium text-white transition-colors hover:bg-accent-hover"
+          >
+            + Add job
+          </button>
+        </div>
       </div>
 
       <DndContext
@@ -241,6 +264,13 @@ export function Board({ initialJobs }: { initialJobs: Job[] }) {
         <AddJobModal
           onClose={() => setAddOpen(false)}
           onCreated={handleJobCreated}
+        />
+      )}
+
+      {findOpen && (
+        <FindJobsModal
+          onClose={() => setFindOpen(false)}
+          onJobsCreated={handleJobsCreated}
         />
       )}
 
