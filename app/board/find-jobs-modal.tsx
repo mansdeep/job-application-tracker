@@ -1,8 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal } from "@/components/ui/modal";
+import { formatCountdown } from "@/lib/format";
 import type { Job } from "@/lib/types";
+
+// Matches SEARCH_DEADLINE_MS in lib/anthropic.ts — the search phase is
+// hard-capped there, so the countdown reaching 0 reflects a real deadline,
+// not just a cosmetic estimate.
+const SEARCH_DEADLINE_SECONDS = 180;
 
 const fieldLabel = "text-[12px] font-medium tracking-[-0.01em] text-text-dim uppercase";
 const fieldInput =
@@ -37,6 +43,38 @@ export function FindJobsModal({
   const [view, setView] = useState<ViewState>({ step: "form" });
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [error, setError] = useState<string | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState(SEARCH_DEADLINE_SECONDS);
+
+  useEffect(() => {
+    if (view.step !== "searching") return;
+    setSecondsLeft(SEARCH_DEADLINE_SECONDS);
+    const interval = setInterval(() => {
+      setSecondsLeft((s) => Math.max(0, s - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [view.step]);
+
+  useEffect(() => {
+    if (view.step !== "searching") return;
+    function handleBeforeUnload(e: BeforeUnloadEvent) {
+      e.preventDefault();
+      e.returnValue = "";
+    }
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [view.step]);
+
+  function handleRequestClose() {
+    if (
+      view.step === "searching" &&
+      !window.confirm(
+        "A job search is still in progress. Closing now won't stop it, but you'll need to search again to see results. Close anyway?",
+      )
+    ) {
+      return;
+    }
+    onClose();
+  }
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -116,7 +154,7 @@ export function FindJobsModal({
   }
 
   return (
-    <Modal onClose={onClose} wide>
+    <Modal onClose={handleRequestClose} wide>
       <h2 className="text-[18px] font-semibold tracking-[-0.02em] text-text-primary">
         Find jobs
       </h2>
@@ -166,10 +204,16 @@ export function FindJobsModal({
           </label>
 
           {view.step === "searching" && (
-            <p className="text-[13px] text-text-dim">
-              Searching the web and checking fit against your resume — this
-              can take a few minutes for a thorough search.
-            </p>
+            <div className="flex items-center gap-2 text-[13px] text-text-dim">
+              <span className="font-mono tabular-nums text-text-secondary">
+                {formatCountdown(secondsLeft)}
+              </span>
+              <span>
+                {secondsLeft > 0
+                  ? "Searching the web and checking fit against your resume…"
+                  : "Wrapping up with whatever's been found…"}
+              </span>
+            </div>
           )}
 
           {error && <p className="text-[15px] text-danger">{error}</p>}
@@ -177,7 +221,7 @@ export function FindJobsModal({
           <div className="flex justify-end gap-2 pt-2">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleRequestClose}
               className="rounded-md border border-border px-3 py-1.5 text-[15px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
             >
               Cancel

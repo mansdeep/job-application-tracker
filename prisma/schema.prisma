@@ -108,6 +108,12 @@ model PrepKit {
   rewrittenResume    String   @db.Text
   interviewQuestions Json
   companyBrief       String   @db.Text
+  // Gaps between the job description and the base resume, and the skills
+  // emphasized/added in the rewritten resume to close them. Live on the kit
+  // itself (not JobApplication.notes) specifically so deleting the kit
+  // deletes these findings too, via the cascade below.
+  resumeGaps         Json     @default("[]")
+  resumeAdditions    Json     @default("[]")
   createdAt          DateTime @default(now())
 
   jobApplication JobApplication @relation(fields: [jobApplicationId], references: [id], onDelete: Cascade)

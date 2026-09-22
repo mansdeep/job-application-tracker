@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { CharCount } from "@/components/ui/char-count";
 import { STATUSES } from "@/lib/status";
+import { LIMITS } from "@/lib/limits";
 import type { Job, PrepKitData } from "@/lib/types";
 import { PrepKitPanel } from "./prepkit-panel";
 
@@ -20,17 +22,43 @@ export function JobDetail({
   onDeleted: (jobId: string) => void;
   onPrepKitChange: (jobId: string, hasKit: boolean) => void;
 }) {
+  const [description, setDescription] = useState(job.description);
+  const [editingDescription, setEditingDescription] = useState(false);
   const [notes, setNotes] = useState(job.notes ?? "");
   const [status, setStatus] = useState(job.status);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [kitGenerating, setKitGenerating] = useState(false);
 
   const [prepKit, setPrepKit] = useState<PrepKitData | null>(null);
   const [resumeMissing, setResumeMissing] = useState(false);
   const [loadingKit, setLoadingKit] = useState(true);
 
-  const dirty = notes !== (job.notes ?? "") || status !== job.status;
+  const dirty =
+    notes !== (job.notes ?? "") || status !== job.status || description !== job.description;
+
+  useEffect(() => {
+    if (!kitGenerating) return;
+    function handleBeforeUnload(e: BeforeUnloadEvent) {
+      e.preventDefault();
+      e.returnValue = "";
+    }
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [kitGenerating]);
+
+  function handleRequestClose() {
+    if (
+      kitGenerating &&
+      !window.confirm(
+        "A Preparation Kit is still being generated. Closing now won't stop it, but you'll need to reopen this job to see the result. Close anyway?",
+      )
+    ) {
+      return;
+    }
+    onClose();
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -61,7 +89,7 @@ export function JobDetail({
       const res = await fetch(`/api/jobs/${job.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ notes: notes || null, status }),
+        body: JSON.stringify({ notes: notes || null, status, description }),
       });
       if (res.ok) {
         const { job: updated } = await res.json();
@@ -85,7 +113,7 @@ export function JobDetail({
 
   return (
     <>
-      <Modal onClose={onClose} wide>
+      <Modal onClose={handleRequestClose} wide>
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-[18px] font-semibold tracking-[-0.02em] text-text-primary">
@@ -118,12 +146,47 @@ export function JobDetail({
         )}
 
         <div className="mt-4">
-          <h3 className="text-[12px] font-medium uppercase tracking-[-0.01em] text-text-dim">
-            Job description
-          </h3>
-          <div className="mt-1 max-h-64 overflow-y-auto whitespace-pre-wrap rounded-md border border-border bg-surface-1 p-3 text-[15px] text-text-secondary">
-            {job.description}
+          <div className="flex items-center justify-between">
+            <h3 className="text-[12px] font-medium uppercase tracking-[-0.01em] text-text-dim">
+              Job description
+            </h3>
+            {editingDescription ? (
+              <button
+                onClick={() => {
+                  setDescription(job.description);
+                  setEditingDescription(false);
+                }}
+                className="text-[13px] text-text-secondary transition-colors hover:text-text-primary"
+              >
+                Cancel
+              </button>
+            ) : (
+              <button
+                onClick={() => setEditingDescription(true)}
+                className="text-[13px] text-text-secondary transition-colors hover:text-text-primary"
+              >
+                Edit
+              </button>
+            )}
           </div>
+          {editingDescription ? (
+            <>
+              <textarea
+                rows={8}
+                maxLength={LIMITS.jobDescription}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="mt-1 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-primary focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+              />
+              <div className="mt-1 flex justify-end">
+                <CharCount length={description.length} max={LIMITS.jobDescription} />
+              </div>
+            </>
+          ) : (
+            <div className="mt-1 max-h-64 overflow-y-auto whitespace-pre-wrap rounded-md border border-border bg-surface-1 p-3 text-[15px] text-text-secondary">
+              {description}
+            </div>
+          )}
         </div>
 
         <div className="mt-4">
@@ -132,11 +195,15 @@ export function JobDetail({
           </h3>
           <textarea
             rows={3}
+            maxLength={LIMITS.jobNotes}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Add a note…"
             className="mt-1 w-full rounded-md border border-border bg-surface-1 px-3 py-2 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
+          <div className="mt-1 flex justify-end">
+            <CharCount length={notes.length} max={LIMITS.jobNotes} />
+          </div>
         </div>
 
         {!loadingKit && (
@@ -145,6 +212,7 @@ export function JobDetail({
             initialPrepKit={prepKit}
             resumeMissing={resumeMissing}
             onKitChange={(hasKit) => onPrepKitChange(job.id, hasKit)}
+            onGeneratingChange={setKitGenerating}
           />
         )}
 
@@ -157,7 +225,7 @@ export function JobDetail({
           </button>
           <div className="flex gap-2">
             <button
-              onClick={onClose}
+              onClick={handleRequestClose}
               className="rounded-md border border-border px-3 py-1.5 text-[15px] text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
             >
               Close

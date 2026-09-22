@@ -6,6 +6,8 @@ export type PrepKitData = {
   rewrittenResume: string;
   interviewQuestions: string[];
   companyBrief: string;
+  resumeGaps: string[];
+  resumeAdditions: string[];
   createdAt: string;
 };
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Modal } from "@/components/ui/modal";
+import { LIMITS } from "@/lib/limits";
 import type { Job } from "@/lib/types";
 
 const fieldLabel = "text-[12px] font-medium tracking-[-0.01em] text-text-dim uppercase";
@@ -182,6 +183,7 @@ export function AddJobModal({
           <textarea
             required
             rows={8}
+            maxLength={LIMITS.jobDescription}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className={fieldInput}

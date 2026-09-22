@@ -5,12 +5,13 @@ import { prisma } from "@/lib/prisma";
 import { searchJobs } from "@/lib/anthropic";
 import { jobSearchRequestSchema } from "@/lib/validation";
 
-// Multi-round web search is genuinely slow (measured 90s-250s+ for a real
-// search). This route's maxDuration is only honored on hosts that allow it —
-// Vercel's Hobby/free tier hard-caps every function at 60s regardless of
-// this value, so this feature needs at least a Pro plan to run reliably
-// once deployed. Works without limitation for local dev.
-export const maxDuration = 180;
+// searchJobs hard-caps its own web-search phase at 3 minutes (see
+// SEARCH_DEADLINE_MS in lib/anthropic.ts), plus a fast ~30s extraction pass
+// after — this must stay comfortably above that combined budget. Only
+// honored on hosts that allow it: Vercel's Hobby/free tier hard-caps every
+// function at 60s regardless of this value, so this feature needs at least
+// a Pro plan to run reliably once deployed. Works without limitation locally.
+export const maxDuration = 220;
 
 export async function POST(request: NextRequest) {
   try {
