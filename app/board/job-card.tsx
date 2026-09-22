@@ -36,7 +36,7 @@ export function JobCard({
       {...attributes}
       {...listeners}
       onClick={onClick}
-      className="cursor-grab rounded-md border border-border bg-surface-2 p-3 transition-colors active:cursor-grabbing hover:border-white/15"
+      className="cursor-grab rounded-md border border-border bg-surface-2 p-3 transition-colors active:cursor-grabbing hover:border-text-dim"
     >
       <div className="text-[15px] font-medium text-text-primary">
         {job.role}

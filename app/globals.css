@@ -20,17 +20,26 @@
   --color-danger: #dc2626;
 }
 
+/*
+ * Dark palette values sourced from the "Linear-design-analysis" token spec
+ * (linear.app marketing surfaces). That spec's 4-step surface ladder
+ * (surface-1..4) and 3-step text ladder (ink/ink-muted/ink-subtle/ink-tertiary)
+ * are compressed onto our existing 3-surface / 2-text-tier tokens rather than
+ * renaming everything through every component. `danger` isn't part of the
+ * source spec (a marketing page has no destructive actions) — kept as our
+ * own addition since the app has real delete flows that need it.
+ */
 :root[data-theme="dark"] {
   --color-canvas: #010102;
-  --color-surface-1: #0a0b0d;
-  --color-surface-2: #0f1011;
-  --color-surface-3: #161719;
-  --color-border: rgba(255, 255, 255, 0.08);
+  --color-surface-1: #0f1011;
+  --color-surface-2: #141516;
+  --color-surface-3: #18191a;
+  --color-border: #23252a;
   --color-text-primary: #f7f8f8;
-  --color-text-secondary: #8a8f98;
-  --color-text-dim: #565860;
+  --color-text-secondary: #d0d6e0;
+  --color-text-dim: #8a8f98;
   --color-accent: #5e6ad2;
-  --color-accent-hover: #6e78dc;
+  --color-accent-hover: #828fff;
   --color-danger: #e5484d;
 }
 

@@ -49,6 +49,53 @@ When writing or refactoring UI code, treat this file as immutable truth. Prefer 
 
 - Tokens live in `app/globals.css` as CSS custom properties, registered with Tailwind v4's `@theme inline` so they're usable as `bg-surface-2`, `text-text-primary`, `border-border`, `text-accent`, etc.
 - Fonts: Inter (sans) and JetBrains Mono (mono), loaded via `next/font/google` in `app/layout.tsx`.
-- This app is single-theme **light** (white canvas, near-black text) — by explicit request, overriding this spec's dark-mode default. Same surface-ladder + hairline-border structure as the dark spec, just inverted; no light/dark toggle, no `prefers-color-scheme` branching.
+- **Light is the default theme** (white canvas, near-black text) — by explicit request, overriding this spec's dark-mode default. **Dark is available as a per-user toggle** (Profile → Appearance, `User.themePreference` in the DB), applied via `[data-theme="dark"]` on `<html>` set server-side from the signed-in user's saved preference — no flash on load, no `prefers-color-scheme` branching. Both themes share the same surface-ladder + hairline-border structure.
 - Dates, counts, and other key-value metadata (job card timestamps, column counts) use the mono font per section 3.
 - No `rounded-full` badges/pills anywhere — status/kit indicators use `rounded` (4px) or `rounded-md` (6px) bordered tags instead.
+
+### Dark palette revision — "Linear-design-analysis" spec
+
+The dark theme's exact color values were later revised against a more detailed token
+spec extracted directly from linear.app's marketing surfaces (colors, a full
+typographic scale, spacing/radius scales, and a large marketing-page component
+library — pricing cards, testimonials, changelog rows, a top-nav with
+"Sign in"/"Get started", etc.). Two scoping decisions were made explicitly with the
+user, since that source spec conflicts with / doesn't map cleanly onto this app:
+
+1. **Keep the light/dark toggle.** The source spec is dark-only ("Don't ship a
+   light-mode... page") — this project keeps light as default with dark as a
+   toggle regardless; only the dark palette's values were revised.
+2. **Extract tokens, don't adopt marketing components.** This app is a functional
+   dashboard, not a marketing/landing page — pricing cards, testimonial cards,
+   customer logo tiles, changelog rows, and the marketing top-nav/footer have no
+   equivalent screens here and were not built. Only the color values (and the
+   already-shared principles — negative tracking on headings, hairline borders,
+   no shadows) were carried over onto the app's real components (board, cards,
+   modals, buttons, inputs).
+
+Token mapping (source spec → this app's dark tokens) — the source's 4-step surface
+ladder and 4-tier text hierarchy were compressed onto this app's existing 3-surface /
+2-text-tier tokens rather than renaming every component's classes:
+
+| This app's token | Source spec token | Value |
+|---|---|---|
+| `canvas` | `canvas` | `#010102` |
+| `surface-1` | `surface-1` | `#0f1011` |
+| `surface-2` | `surface-2` | `#141516` |
+| `surface-3` | `surface-3` | `#18191a` |
+| `border` | `hairline` | `#23252a` |
+| `text-primary` | `ink` | `#f7f8f8` |
+| `text-secondary` | `ink-muted` | `#d0d6e0` |
+| `text-dim` | `ink-subtle` | `#8a8f98` |
+| `accent` | `primary` | `#5e6ad2` |
+| `accent-hover` | `primary-hover` | `#828fff` |
+| `danger` | *(not in source — marketing pages have no destructive actions)* | `#e5484d`, kept as this app's own addition for real delete flows |
+
+Not adopted: the source spec's display typography scale (80px/56px/40px hero sizes)
+has no use in a dense dashboard with no hero sections; the marketing-specific
+component tokens (`pricing-card`, `testimonial-card`, `changelog-row`,
+`customer-logo-tile`, `cta-banner`, `top-nav`/`footer` with sign-in/get-started
+copy) were left out entirely, as scoped above; the source's 4-tier text hierarchy
+and `hairline-strong`/`hairline-tertiary`/`surface-4` steps were compressed rather
+than each getting a dedicated token, since this app's components don't currently
+need that many levels of distinction.
