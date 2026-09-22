@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 /*
- * Linear-aesthetic design tokens (see DESIGN.md). Light theme, single theme —
- * white canvas / black text, per explicit override of the spec's dark-mode
- * default. Same surface-ladder + hairline-border structure, just inverted.
+ * Linear-aesthetic design tokens (see DESIGN.md). Light is the default
+ * theme; dark is available as a per-user toggle (Profile page), applied via
+ * [data-theme="dark"] on <html> set server-side from the signed-in user's
+ * saved preference. Same surface-ladder + hairline-border structure in both.
  */
 :root {
   --color-canvas: #ffffff;
@@ -17,6 +18,20 @@
   --color-accent: #5e6ad2;
   --color-accent-hover: #4c56c4;
   --color-danger: #dc2626;
+}
+
+:root[data-theme="dark"] {
+  --color-canvas: #010102;
+  --color-surface-1: #0a0b0d;
+  --color-surface-2: #0f1011;
+  --color-surface-3: #161719;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-text-primary: #f7f8f8;
+  --color-text-secondary: #8a8f98;
+  --color-text-dim: #565860;
+  --color-accent: #5e6ad2;
+  --color-accent-hover: #6e78dc;
+  --color-danger: #e5484d;
 }
 
 @theme inline {

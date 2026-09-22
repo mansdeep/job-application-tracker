@@ -3,6 +3,7 @@ import { auth, signOut } from "@/auth";
 import { requireSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ResumeForm } from "./resume-form";
+import { ThemeToggle } from "./theme-toggle";
 
 export default async function ProfilePage() {
   const session = await auth();
@@ -15,6 +16,7 @@ export default async function ProfilePage() {
       resumeFileName: true,
       resumeFileType: true,
       resumeUpdatedAt: true,
+      themePreference: true,
     },
   });
 
@@ -68,6 +70,16 @@ export default async function ProfilePage() {
               resumeUpdatedAt: user.resumeUpdatedAt?.toISOString() ?? null,
             }}
           />
+        </div>
+
+        <h2 className="mt-8 text-[18px] font-semibold tracking-[-0.02em] text-text-primary">
+          Appearance
+        </h2>
+        <p className="mt-1 text-[14px] text-text-secondary">
+          Choose how the app looks. Saved to your account.
+        </p>
+        <div className="mt-4 max-w-xs">
+          <ThemeToggle initial={user.themePreference} />
         </div>
       </div>
     </main>

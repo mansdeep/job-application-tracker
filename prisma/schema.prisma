@@ -18,12 +18,19 @@ enum ApplicationStatus {
   REJECTED
 }
 
+enum ThemePreference {
+  LIGHT
+  DARK
+}
+
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
   emailVerified DateTime?
   name          String?
   image         String?
+
+  themePreference ThemePreference @default(LIGHT)
 
   // Base resume, uploaded once and reused for every prep kit generation
   resumeText      String?   @db.Text

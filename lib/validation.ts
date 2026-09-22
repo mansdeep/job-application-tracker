@@ -40,3 +40,7 @@ export const scrapeRequestSchema = z.object({
 export const resumeTextSchema = z.object({
   text: z.string().trim().min(1).max(50_000),
 });
+
+export const themePreferenceSchema = z.object({
+  theme: z.enum(["LIGHT", "DARK"]),
+});
