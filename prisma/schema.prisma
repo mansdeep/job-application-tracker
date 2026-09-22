@@ -32,6 +32,10 @@ model User {
 
   themePreference ThemePreference @default(LIGHT)
 
+  // Null for accounts that only ever sign in via Google — password sign-in
+  // checks this and rejects with "use Google to sign in" if it's null.
+  passwordHash String?
+
   // New sign-ups are unapproved until an admin (see ADMIN_EMAILS) approves
   // them — see lib/auth.ts#requireSession, which admin emails always pass
   // regardless of this flag.

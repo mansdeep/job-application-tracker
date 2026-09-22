@@ -74,6 +74,15 @@ export const updateUserApprovalSchema = z.object({
   isApproved: z.boolean(),
 });
 
+export const registerSchema = z.object({
+  email: z.string().trim().toLowerCase().email(),
+  password: z.string().min(8).max(200),
+});
+
+export const newPasswordSchema = z.object({
+  password: z.string().min(8).max(200),
+});
+
 export const jobSearchRequestSchema = z
   .object({
     company: z.string().trim().max(200).optional(),

@@ -1,4 +1,7 @@
-import { signIn } from "@/auth";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { AuthError } from "next-auth";
+import { signIn, googleEnabled } from "@/auth";
 
 const FEATURES = [
   {
@@ -18,16 +21,41 @@ const FEATURES = [
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ callbackUrl?: string; error?: string }>;
+  searchParams: Promise<{ callbackUrl?: string; error?: string; reset?: string }>;
 }) {
-  const { callbackUrl, error } = await searchParams;
+  const { callbackUrl, error, reset } = await searchParams;
 
-  async function sendMagicLink(formData: FormData) {
+  async function loginWithPassword(formData: FormData) {
     "use server";
-    await signIn("resend", {
-      email: formData.get("email"),
-      redirectTo: callbackUrl ?? "/board",
-    });
+    try {
+      await signIn("credentials", {
+        email: String(formData.get("email") ?? "").trim().toLowerCase(),
+        password: formData.get("password"),
+        redirectTo: callbackUrl ?? "/board",
+      });
+    } catch (err) {
+      // signIn() itself throws a redirect on success (NEXT_REDIRECT, not an
+      // AuthError) — only intercept real auth failures here and let that
+      // one propagate so the successful sign-in redirect still happens.
+      if (err instanceof AuthError) {
+        redirect(
+          `/login?error=CredentialsSignin${callbackUrl ? `&callbackUrl=${encodeURIComponent(callbackUrl)}` : ""}`,
+        );
+      }
+      throw err;
+    }
+  }
+
+  async function loginWithGoogle() {
+    "use server";
+    try {
+      await signIn("google", { redirectTo: callbackUrl ?? "/board" });
+    } catch (err) {
+      if (err instanceof AuthError) {
+        redirect(`/login?error=${err.type}`);
+      }
+      throw err;
+    }
   }
 
   return (
@@ -57,21 +85,21 @@ export default async function LoginPage({
         </div>
 
         <div className="mt-7">
-          <p className="mb-3 text-center text-[14px] text-text-secondary">
-            Enter your email to sign in — first time here creates your
-            account automatically, pending a quick approval. No password to
-            set or remember.
-          </p>
-
-          {error && (
-            <div className="mb-3 rounded-md border border-danger/30 bg-danger/10 p-3 text-center text-[14px] text-danger">
-              We couldn&apos;t send that link. If this keeps happening,
-              please reach out to whoever invited you — this app may not be
-              fully set up to email new sign-ins yet.
+          {reset && !error && (
+            <div className="mb-3 rounded-md border border-border bg-surface-2 p-3 text-center text-[14px] text-text-secondary">
+              Password updated — sign in with your new password.
             </div>
           )}
 
-          <form action={sendMagicLink} className="space-y-3">
+          {error && (
+            <div className="mb-3 rounded-md border border-danger/30 bg-danger/10 p-3 text-center text-[14px] text-danger">
+              {error === "CredentialsSignin"
+                ? "Couldn't sign you in — check your email and password and try again."
+                : "Couldn't sign you in with Google. Please try again."}
+            </div>
+          )}
+
+          <form action={loginWithPassword} className="space-y-3">
             <input
               type="email"
               name="email"
@@ -79,13 +107,54 @@ export default async function LoginPage({
               placeholder="you@example.com"
               className="w-full rounded-md border border-border bg-surface-1 px-4 py-3 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
             />
+            <input
+              type="password"
+              name="password"
+              required
+              placeholder="Password"
+              className="w-full rounded-md border border-border bg-surface-1 px-4 py-3 text-[15px] text-text-primary placeholder:text-text-dim focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+            />
             <button
               type="submit"
               className="w-full rounded-md bg-accent px-4 py-3 text-[15px] font-medium text-white transition-colors hover:bg-accent-hover"
             >
-              Send magic link
+              Sign in
             </button>
           </form>
+
+          <p className="mt-2 text-right text-[13px]">
+            <Link href="/forgot-password" className="text-accent hover:underline">
+              Forgot password?
+            </Link>
+          </p>
+
+          {googleEnabled && (
+            <>
+              <div className="my-4 flex items-center gap-3 text-[13px] text-text-dim">
+                <div className="h-px flex-1 bg-border" />
+                or
+                <div className="h-px flex-1 bg-border" />
+              </div>
+
+              <form action={loginWithGoogle}>
+                <button
+                  type="submit"
+                  className="w-full rounded-md border border-border bg-surface-1 px-4 py-3 text-[15px] font-medium text-text-primary transition-colors hover:bg-surface-3"
+                >
+                  Continue with Google
+                </button>
+              </form>
+            </>
+          )}
+
+          <p className="mt-5 text-center text-[14px] text-text-secondary">
+            New here?{" "}
+            <Link href="/register" className="text-accent hover:underline">
+              Create an account
+            </Link>
+            {" "}— new accounts need a quick approval before they can use the
+            board.
+          </p>
         </div>
       </div>
     </main>
