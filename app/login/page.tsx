@@ -65,7 +65,9 @@ export default async function LoginPage({
 
           {error && (
             <div className="mb-3 rounded-md border border-danger/30 bg-danger/10 p-3 text-center text-[14px] text-danger">
-              We couldn&apos;t send that link. Please try again in a moment.
+              We couldn&apos;t send that link. If this keeps happening,
+              please reach out to whoever invited you — this app may not be
+              fully set up to email new sign-ins yet.
             </div>
           )}
 
