@@ -214,6 +214,7 @@ export function Board({ initialJobs }: { initialJobs: Job[] }) {
       </div>
 
       <DndContext
+        id="job-board"
         sensors={sensors}
         collisionDetection={collisionDetection}
         onDragStart={handleDragStart}
