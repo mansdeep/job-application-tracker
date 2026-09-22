@@ -59,7 +59,8 @@ export default async function LoginPage({
         <div className="mt-7">
           <p className="mb-3 text-center text-[14px] text-text-secondary">
             Enter your email to sign in — first time here creates your
-            account automatically. No password to set or remember.
+            account automatically, pending a quick approval. No password to
+            set or remember.
           </p>
 
           {error && (

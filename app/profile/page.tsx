@@ -1,13 +1,20 @@
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
-import { requireSession } from "@/lib/auth";
+import { requireSession, UnapprovedError } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ResumeForm } from "./resume-form";
 import { ThemeToggle } from "./theme-toggle";
 
 export default async function ProfilePage() {
   const session = await auth();
-  const { userId } = await requireSession();
+  let userId: string;
+  try {
+    ({ userId } = await requireSession());
+  } catch (error) {
+    if (error instanceof UnapprovedError) redirect("/pending");
+    throw error;
+  }
 
   const user = await prisma.user.findUniqueOrThrow({
     where: { id: userId },

@@ -1,12 +1,19 @@
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
-import { requireSession } from "@/lib/auth";
+import { requireSession, isAdminEmail, UnapprovedError } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Board } from "./board";
 
 export default async function BoardPage() {
   const session = await auth();
-  const { userId } = await requireSession();
+  let userId: string;
+  try {
+    ({ userId } = await requireSession());
+  } catch (error) {
+    if (error instanceof UnapprovedError) redirect("/pending");
+    throw error;
+  }
 
   const jobs = await prisma.jobApplication.findMany({
     where: { userId },
@@ -21,6 +28,14 @@ export default async function BoardPage() {
           Job Application Tracker
         </h1>
         <div className="flex items-center gap-4 text-[14px] text-text-secondary">
+          {isAdminEmail(session?.user?.email) && (
+            <Link
+              href="/admin"
+              className="transition-colors hover:text-text-primary"
+            >
+              Admin
+            </Link>
+          )}
           <Link
             href="/profile"
             className="transition-colors hover:text-text-primary"

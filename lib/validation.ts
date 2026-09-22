@@ -70,6 +70,10 @@ export const updatePrepKitSchema = z
     "Nothing to update",
   );
 
+export const updateUserApprovalSchema = z.object({
+  isApproved: z.boolean(),
+});
+
 export const jobSearchRequestSchema = z
   .object({
     company: z.string().trim().max(200).optional(),

@@ -32,6 +32,11 @@ model User {
 
   themePreference ThemePreference @default(LIGHT)
 
+  // New sign-ups are unapproved until an admin (see ADMIN_EMAILS) approves
+  // them — see lib/auth.ts#requireSession, which admin emails always pass
+  // regardless of this flag.
+  isApproved Boolean @default(false)
+
   // Base resume, uploaded once and reused for every prep kit generation
   resumeText      String?   @db.Text
   resumeFileName  String?

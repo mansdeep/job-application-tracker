@@ -1,13 +1,19 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { UnauthorizedError } from "@/lib/auth";
+import { UnauthorizedError, UnapprovedError } from "@/lib/auth";
 import { GenerationError } from "@/lib/anthropic";
 
 /** Maps a caught error to a JSON error response with the right status code. */
 export function toErrorResponse(error: unknown) {
   if (error instanceof UnauthorizedError) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (error instanceof UnapprovedError) {
+    return NextResponse.json(
+      { error: "Your account is pending approval." },
+      { status: 403 },
+    );
   }
   if (error instanceof ZodError) {
     return NextResponse.json(
