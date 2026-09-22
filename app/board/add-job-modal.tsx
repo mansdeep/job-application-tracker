@@ -14,6 +14,14 @@ type FetchState =
   | { status: "success" }
   | { status: "failed"; reason: string };
 
+/** Users very commonly paste a URL without "https://" — treat that as the
+ * same URL rather than failing validation on save. */
+function normalizeUrl(raw: string): string {
+  const trimmed = raw.trim();
+  if (!trimmed || /^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 export function AddJobModal({
   onClose,
   onCreated,
@@ -36,7 +44,7 @@ export function AddJobModal({
       const res = await fetch("/api/scrape", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: sourceUrl }),
+        body: JSON.stringify({ url: normalizeUrl(sourceUrl) }),
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
@@ -68,15 +76,38 @@ export function AddJobModal({
       const res = await fetch("/api/jobs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ company, role, sourceUrl, description }),
+        body: JSON.stringify({
+          company,
+          role,
+          sourceUrl: normalizeUrl(sourceUrl),
+          description,
+        }),
       });
+      const data = await res.json();
       if (!res.ok) {
-        throw new Error("Couldn't save this job. Please check the fields and try again.");
+        if (res.status === 401) {
+          throw new Error("Your session expired. Please sign in again.");
+        }
+        const detail = Array.isArray(data?.issues)
+          ? data.issues
+              .map((i: { path: (string | number)[]; message: string }) =>
+                i.path.length ? `${i.path.join(".")}: ${i.message}` : i.message,
+              )
+              .join("; ")
+          : data?.error;
+        throw new Error(
+          detail
+            ? `Couldn't save this job — ${detail}`
+            : "Couldn't save this job. Please check the fields and try again.",
+        );
       }
-      const { job } = await res.json();
-      onCreated(job);
-    } catch {
-      setError("Couldn't save this job. Please check the fields and try again.");
+      onCreated(data.job);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Couldn't save this job. Please check the fields and try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -96,7 +127,8 @@ export function AddJobModal({
           <label className={fieldLabel}>Job posting URL (optional)</label>
           <div className="mt-1 flex gap-2">
             <input
-              type="url"
+              type="text"
+              inputMode="url"
               value={sourceUrl}
               onChange={(e) => {
                 setSourceUrl(e.target.value);
